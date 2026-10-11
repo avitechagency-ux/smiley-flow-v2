@@ -1,0 +1,10 @@
+// Level loader: levels come from js/levels.js (unique solutions); this picks the emoji for each pair
+function rng(s){return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+function packIdx(n){return Math.floor((n-BUILTIN-1)/PACK_SIZE)+1}
+function getLv(n){if(n<=BUILTIN)return LEVELS[n-1];const p=window.LV_PACKS[packIdx(n)];return p?p[(n-BUILTIN-1)%PACK_SIZE]:null}
+function loadPack(k){return new Promise(res=>{if(window.LV_PACKS[k])return res(true);const s=document.createElement('script');s.src='levels/pack-'+String(k).padStart(4,'0')+'.js';s.onload=()=>res(!!window.LV_PACKS[k]);s.onerror=()=>res(false);document.head.appendChild(s)})}
+function mk(n,fs,dl,cus){const SRC=ACTIVE||LEVELS,lv=cus||(dl?LEVELS[30+n%(LEVELS.length-30)]:(ACTIVE?SRC[Math.min(n,SRC.length)-1]:getLv(n))),size=lv.s,r=rng(cus?cus.seed:n*7919+13),k=lv.p.length;
+ const pk=PACKS[activePack()],pool=pk.e.slice();for(let i=pool.length-1;i>0;i--){const j=(r()*(i+1))|0;[pool[i],pool[j]]=[pool[j],pool[i]]}
+ const ch=[];for(const c of pool)if(ch.length<k&&!(pk.bad&&ch.some(x=>pk.bad(x,c))))ch.push(c);
+ for(const c of pool)if(ch.length<k&&!ch.includes(c))ch.push(c);
+ return{size,blocks:lv.b||[],pairs:lv.p.map((s,i)=>({a:s[0],b:s[s.length-1],sol:s,e:ch[i]}))}}

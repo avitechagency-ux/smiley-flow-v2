@@ -1,0 +1,14 @@
+// Save data (localStorage), sound, HUD refresh
+const S={diamonds:START_DIAMONDS,unlocked:1,owned:['faces'],theme:'faces',stars:{},sound:true,music:true,daily:0,w:{},dr:{last:'',streak:0},bg:'neon',bgOwned:['neon']};
+try{Object.assign(S,JSON.parse(localStorage.getItem('sf')||'{}'))}catch(e){}
+if(!Array.isArray(S.owned))S.owned=['faces'];if(!S.stars||typeof S.stars!=='object')S.stars={};if(!S.w||typeof S.w!=='object')S.w={};if(!Array.isArray(S.bgOwned))S.bgOwned=['neon'];
+delete S.coins;delete S.hints;if(typeof S.diamonds!=='number')S.diamonds=START_DIAMONDS;
+const save=()=>{try{localStorage.setItem('sf',JSON.stringify(S))}catch(e){}};
+S.owned=S.owned.filter(k=>PACKS[k]);if(!PACKS[S.theme])S.theme='faces';if(!S.owned.includes('faces'))S.owned.push('faces');S.stars=S.stars||{};S.dr=S.dr||{last:'',streak:0};if(!BG_THEMES[S.bg])S.bg='neon';S.bgOwned=(S.bgOwned||['neon']).filter(k=>BG_THEMES[k]);if(!S.bgOwned.includes('neon'))S.bgOwned.push('neon');
+function recalcUnlock(P){let m=0;for(const k in P.stars)m=Math.max(m,+k);P.unlocked=Math.max(TEST_UNLOCK,m+1)}
+function fixUnlock(){recalcUnlock(S);S.unlocked=Math.min(S.unlocked,TOTAL_LEVELS);Object.values(S.w).forEach(recalcUnlock)}
+function refresh(){$$('.dia-n').forEach(x=>x.textContent=S.diamonds);$$('.hc').forEach(x=>x.textContent=HINT_COST);$$('.xc').forEach(x=>x.textContent=EXTEND_COST);$$('.ar').forEach(x=>x.textContent=AD_REWARD);$$('.dr').forEach(x=>x.textContent=DAILY_REWARD);
+ $$('.uc').forEach(x=>x.innerHTML=UNDO_COST?'<i class="ic dia">💎</i>'+UNDO_COST:'');$$('.sw-snd').forEach(e=>e.classList.toggle('on',S.sound));$$('.sw-mus').forEach(e=>e.classList.toggle('on',S.music));const g=$('#giftdot');if(g)g.style.display=(typeof drState==='function'&&drState().claimable)?'flex':'none';save()}
+function toggleSound(){S.sound=!S.sound;refresh()}
+function toggleMusic(){S.music=!S.music;refresh();Music.sync()}
+let AC;function beep(f,d,w){setTimeout(()=>{if(!S.sound)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}},w||0)}

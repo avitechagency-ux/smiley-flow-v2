@@ -1,0 +1,29 @@
+// Screens, level list, theme shop, emoji images, animated emoji
+function show(id){Music.play(ACTIVE?ONLINE_BASE+(WORLD.music||''):'assets/music/'+(id==='game'?'game':'home')+'.mp3');
+ $$('.scr').forEach(s=>s.classList.toggle('on',s.id===id));document.body.dataset.s=id;$$('.modal').forEach(p=>p.classList.remove('on'));
+ if(id==='levels')buildLevels();if(id==='theme')buildThemes();if(id==='shop')buildShop();if(id==='home'){netState();playSub()}
+ if(!ACTIVE){const k=id==='game'?BG_THEMES[S.bg].fx:'';if(k)WorldFX.start(k);else WorldFX.stop()}
+ refresh()}
+function buildLevels(){const g=$('#lv'),P=wprog();g.innerHTML='';$('#rndBtn').style.display=ACTIVE?'none':'';$('#lvh').textContent=ACTIVE?WORLD.name:'Levels';const tot=maxL(),PS=50,pages=Math.ceil(tot/PS);if(LV_PG<0)LV_PG=Math.floor((Math.min(P.unlocked,tot)-1)/PS);LV_PG=Math.max(0,Math.min(LV_PG,pages-1));
+ for(let i=LV_PG*PS+1;i<=Math.min(tot,(LV_PG+1)*PS);i++){const b=document.createElement('button'),st=P.stars[i]||0;
+ b.innerHTML=i<=P.unlocked?i+'<small>'+(st?[0,1,2].map(k=>'<i class="st '+(k<st?'on':'off')+'"></i>').join(''):'')+'</small>':'🔒';b.disabled=i>P.unlocked;if(i===P.unlocked)b.classList.add('cur');b.onclick=()=>play(i);g.appendChild(b)}
+ lvNav(pages,PS,tot)}
+let LV_PG=-1;
+function lvNav(pages,PS,tot){const n=$('#lvnav');if(pages<2){n.innerHTML='';return}const a=LV_PG*PS+1,b=Math.min(tot,(LV_PG+1)*PS);
+ n.innerHTML='<button class="ib2" '+(LV_PG?'':'disabled')+' onclick="lvgo(-1)">&#8249;</button><span>'+a+' - '+b+' of '+tot+'</span><button class="btn-secondary" onclick="lvcur()">Current</button><button class="ib2" '+(LV_PG<pages-1?'':'disabled')+' onclick="lvgo(1)">&#8250;</button>'}
+function lvgo(d){LV_PG+=d;buildLevels()}
+function lvcur(){LV_PG=-1;buildLevels()}
+function help(){alert('Drag from a face to its twin. Lines cannot cross and dark blocks cannot be used. Cover every square to win. A connected line stays until you press Undo. Hint glows the path for one pair, you draw it yourself.')}
+function applyBg(){document.body.dataset.bg=ACTIVE?WORLD.fx:S.bg}
+function watchAd(){if(!ADS_ENABLED)return alert('Ads are coming soon');S.diamonds+=AD_REWARD;refresh()}
+function ico(ch,k){const i=new Image();i.onerror=()=>{const s=document.createElement('span');s.textContent=ch;i.replaceWith(s)};
+ i.src='assets/packs/'+PACKS[k||activePack()].dir+'/'+ch.codePointAt(0).toString(16)+'.webp';return i}
+function em(ch,k){const w=document.createElement('div');w.className='em';w.appendChild(ico(ch,k));return w}
+// Animated emoji: uses assets/anim/<name>.webp if you add it, otherwise a CSS-animated emoji character
+function animEm(name,ch){const i=new Image();i.className='ae';i.onerror=()=>{const s=document.createElement('span');s.className='ce';s.appendChild(ico(ch,'faces'));i.replaceWith(s)};i.src=ANIM[name]||'assets/anim/'+name+'.webp';return i}
+function buildThemes(){const t=$('#tl');t.innerHTML='';for(const k in BG_THEMES){const p=BG_THEMES[k],r=document.createElement('div');r.className='row';
+ const pv=document.createElement('div');pv.className='tp tp-'+k;pv.innerHTML='<i class="mini"></i>';
+ const nm=document.createElement('b');nm.textContent=p.n;
+ const b=document.createElement('button'),own=S.bgOwned.includes(k);b.innerHTML=S.bg===k?'✔ In use':own?'Use':'<i class="ic dia">💎</i> '+p.p;b.disabled=S.bg===k;
+ b.onclick=()=>{if(!own){if(S.diamonds<p.p)return toast('Not enough diamonds');S.diamonds-=p.p;S.bgOwned.push(k)}S.bg=k;applyBg();refresh();buildThemes()};
+ r.append(nm,pv,b);t.appendChild(r)}}

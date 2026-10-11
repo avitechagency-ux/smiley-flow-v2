@@ -1,0 +1,37 @@
+// Online mode: worlds are downloaded from ONLINE_BASE (needs internet). Offline play uses the built-in levels.
+let ACTIVE=null,WORLD=null,ANIM={};
+const activePack=()=>ACTIVE&&WORLD&&WORLD.pack?WORLD.pack:S.theme;
+const maxL=()=>ACTIVE?ACTIVE.length:TOTAL_LEVELS;
+function wprog(){if(!ACTIVE)return S;return S.w[WORLD.id]=S.w[WORLD.id]||{unlocked:TEST_UNLOCK,stars:{}}}
+// Loads a .js data file from ONLINE_BASE with a script tag: works on file://, in app WebViews and across sites (no CORS), and fails clearly when there is no connection.
+function jsload(path,ms){return new Promise((res,rej)=>{const s=document.createElement('script'),t=setTimeout(()=>{s.remove();rej(new Error('timeout'))},ms||10000);
+ s.onload=()=>{clearTimeout(t);res()};s.onerror=()=>{clearTimeout(t);s.remove();rej(new Error('load'))};s.src=ONLINE_BASE+path+'?v='+Math.floor(Date.now()/600000);document.head.appendChild(s)})}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('on'),2200)}
+function netState(){}
+function chip(){}
+function opanel(emoji,title,msg,btns){return '<div class="opanel"><div class="oe">'+emoji+'</div><b>'+title+'</b><p>'+msg+'</p>'+btns+'</div>'}
+function ostate(k){const l=$('#wl');
+ if(k==='load'){chip('load');l.innerHTML='<div class="sk big"></div><div class="sk"></div><div class="sk"></div>'}
+ else if(k==='off'){chip('off');l.innerHTML=opanel('📡',"You're offline",'Online worlds need internet. Your offline levels still work.','<button class="gold" onclick="openOnline()">Try again</button> <button class="btn-secondary" onclick="playOffline()">Play offline</button>')}
+ else{chip('err');l.innerHTML=opanel('😵','Could not load worlds','Check your connection and try again.','<button class="gold" onclick="openOnline()">Retry</button>')}}
+async function openOnline(){leaveWorld();show('online');
+ let cached=null;try{cached=JSON.parse(localStorage.getItem('sf_worlds')||'null')}catch(e){}
+ if(cached&&cached.worlds)buildWorlds(cached.worlds);else ostate('load');
+ try{window.ONLINE_WORLDS=null;await jsload('worlds.js');const m=window.ONLINE_WORLDS;if(!m||!m.worlds)throw new Error('empty');
+  try{localStorage.setItem('sf_worlds',JSON.stringify(m))}catch(e){}buildWorlds(m.worlds)}
+ catch(e){if(!cached)ostate(navigator.onLine===false?'off':'err')}}
+function prog(w){const P=S.w[w.id]||{stars:{}},total=w.count||20,v=Object.values(P.stars),done=Math.min(total,v.length);return{done,total,stars:v.reduce((x,y)=>x+y,0),pct:Math.round(done/total*100)}}
+function emAvatar(w){const d=document.createElement('span');d.className='ae-fb';const k=w.pack;
+ if(k&&PACKS[k]){const im=new Image();im.onerror=()=>{d.textContent=w.emoji};im.src='assets/packs/'+PACKS[k].dir+'/'+w.emoji.codePointAt(0).toString(16)+'.webp';d.appendChild(im)}else d.textContent=w.emoji;return d}
+function fillAvatar(el,w){el.appendChild(emAvatar(w));if(!w.icon)return;const i=new Image();i.className='aimg';i.onload=()=>{el.innerHTML='';el.appendChild(i)};i.src=ONLINE_BASE+w.icon}
+function buildWorlds(ws){const l=$('#wl');l.innerHTML='';
+ ws.forEach(w=>{const p=prog(w),c=w.color||['#86c6f7','#6f95ee'],b=document.createElement('button');b.className='oc';b.style.setProperty('--c1',c[0]);b.style.setProperty('--c2',c[1]);
+  b.innerHTML='<span class="oav"></span><span class="otx"><b>'+w.name+'</b><small>'+(w.tagline||w.desc||'')+'</small></span><span class="ost"><span><i>'+p.total+'</i>Levels</span><span><i>'+p.stars+'/'+p.total*3+'</i>Stars</span><span><i>'+p.done+'</i>Done</span></span><span class="ocirc"><i>'+p.pct+'%</i><small>Complete</small></span><em class="oplay">&#9654;</em>'+(w.featured?'<u class="ofe">FEATURED</u>':'');
+  fillAvatar(b.querySelector('.oav'),w);b.onclick=()=>openWorld(w);l.appendChild(b)});
+ const s=document.createElement('div');s.className='oc soon';s.style.setProperty('--c1','#f27aa0');s.style.setProperty('--c2','#e04a6a');
+ s.innerHTML='<span class="oav lockav">🔒</span><span class="otx"><b>More maps</b><small>New maps are added regularly</small></span><span class="ocirc"><i>?</i><small>Coming soon</small></span>';l.appendChild(s);window.WORLDS=ws}
+function openWorldById(id){const w=(window.WORLDS||[]).find(x=>x.id===id);if(w)openWorld(w)}
+async function openWorld(w){toast('Loading '+w.name+'...');try{window.ONLINE_LV=window.ONLINE_LV||{};delete window.ONLINE_LV[w.id];await jsload(w.levels);const L=window.ONLINE_LV[w.id];if(!L||!L.length)throw new Error('empty');ACTIVE=L;WORLD=w;applyBg();ANIM=Object.fromEntries(Object.entries(w.anim||{}).map(([k,v])=>[k,/^https?:/.test(v)?v:ONLINE_BASE+v]));document.body.classList.add('w-'+w.fx);WorldFX.start(w.fx);LV_PG=-1;show('levels')}catch(e){toast('Could not load this world')}}
+function leaveWorld(){if(WORLD)document.body.classList.remove('w-'+WORLD.fx);ACTIVE=null;WORLD=null;ANIM={};WorldFX.stop();applyBg()}
+function backLevels(){if(ACTIVE){leaveWorld();show('online')}else show('home')}
+function playOffline(){leaveWorld();LV_PG=-1;show('levels')}

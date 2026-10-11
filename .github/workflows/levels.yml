@@ -1,0 +1,66 @@
+name: Generate levels
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/level-generator/make.js'
+      - 'tools/level-generator/lib.js'
+      - '.github/workflows/levels.yml'
+  workflow_dispatch:
+    inputs:
+      from:
+        description: First level to make
+        default: '501'
+      to:
+        description: Last level to make
+        default: '10000'
+jobs:
+  gen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Make this shard's levels
+        working-directory: tools/level-generator
+        run: node make.js ${{ inputs.from || '501' }} ${{ inputs.to || '10000' }} ${{ matrix.shard }} 20
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: levels-${{ matrix.shard }}
+          path: tools/level-generator/out/*.json
+  merge:
+    needs: gen
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: levels-*
+          merge-multiple: true
+          path: tools/level-generator/out
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build level files
+        working-directory: tools/level-generator
+        run: |
+          node merge.js ../../js/levels.js 500
+          node merge-packs.js ../../levels
+      - name: Save to the repo
+        run: |
+          git config user.name "level-bot"
+          git config user.email "level-bot@users.noreply.github.com"
+          git add js/levels.js levels tools/level-generator/out
+          git commit -m "Add generated levels" || echo "nothing to commit"
+          git pull --rebase origin main || true
+          git push

@@ -1,0 +1,49 @@
+/* Each rule below only turns on when its PNG exists in assets/ui/ (see js/skin.js). Paths are relative to this file. */
+/* Backgrounds (full screen, change per screen) */
+.a-bg-home body[data-s=home]{background:url(../assets/ui/bg-home.png) center/cover fixed no-repeat}
+.a-bg-levels body[data-s=levels],.a-bg-levels body[data-s=shop],.a-bg-levels body[data-s=theme]{background:url(../assets/ui/bg-levels.png) center/cover fixed no-repeat}
+.a-bg-game body[data-s=game]{background:url(../assets/ui/bg-game.png) center/cover fixed no-repeat}
+/* Logo replaces the title text */
+.a-logo h1{font-size:0;height:30vh;width:100%;background:url(../assets/ui/logo.png) center/contain no-repeat}
+/* Text buttons (image should be blank; the game writes the label) */
+.a-btn-primary .btn-primary{background:url(../assets/ui/btn-primary.png) center/100% 100% no-repeat;border:0;min-height:64px;color:#fff;text-shadow:0 2px 3px rgba(0,0,0,.6)}
+.a-btn-secondary .btn-secondary{background:url(../assets/ui/btn-secondary.png) center/100% 100% no-repeat;border:0;min-height:56px;color:#fff;text-shadow:0 2px 3px rgba(0,0,0,.6)}
+/* Icon buttons (image contains the icon; the text label is hidden) */
+.a-btn-back .btn-back,.a-btn-undo .btn-undo,.a-btn-reset .btn-reset,.a-btn-hint .btn-hint,.a-btn-help .btn-help,.a-btn-sound .btn-sound{border:0;padding:0;width:64px;height:64px;background-position:center;background-size:contain;background-repeat:no-repeat;background-color:transparent}
+.a-btn-back .btn-back{background-image:url(../assets/ui/btn-back.png)}
+.a-btn-undo .btn-undo{background-image:url(../assets/ui/btn-undo.png)}
+.a-btn-reset .btn-reset{background-image:url(../assets/ui/btn-reset.png)}
+.a-btn-hint .btn-hint{background-image:url(../assets/ui/btn-hint.png)}
+.a-btn-help .btn-help{background-image:url(../assets/ui/btn-help.png)}
+.a-btn-sound .btn-sound{background-image:url(../assets/ui/btn-sound.png)}
+.a-btn-back .btn-back .lbl,.a-btn-undo .btn-undo .lbl,.a-btn-reset .btn-reset .lbl,.a-btn-hint .btn-hint .lbl,.a-btn-help .btn-help .lbl,.a-btn-sound .btn-sound .lbl{display:none}
+/* Panels: pills, rows, theme cards */
+.a-panel .pill,.a-panel .row{background:url(../assets/ui/panel.png) center/100% 100% no-repeat;border:0}
+/* Board */
+.a-board-frame #bwrap{background:url(../assets/ui/board-frame.png) center/100% 100% no-repeat;padding:4%}
+.a-board-frame #board{border:0;background-color:transparent;border-radius:0}
+.a-cell #board{background-image:url(../assets/ui/cell.png);background-size:calc(100%/var(--n)) calc(100%/var(--n));background-color:transparent}
+.a-block .blk{background:url(../assets/ui/block.png) center/100% 100% no-repeat;border:0}
+/* Level tiles and stars */
+.a-level-tile .grid button:not(:disabled){background:url(../assets/ui/level-tile.png) center/100% 100% no-repeat;border:0;color:#fff}
+.a-level-locked .grid button:disabled{background:url(../assets/ui/level-locked.png) center/100% 100% no-repeat;border:0;font-size:0;opacity:1}
+.a-star-on .st.on::before,.a-star-off .st.off::before{content:none}
+.a-star-on .st.on{display:inline-block;width:1em;height:1em;background:url(../assets/ui/star-on.png) center/contain no-repeat}
+.a-star-off .st.off{display:inline-block;width:1em;height:1em;background:url(../assets/ui/star-off.png) center/contain no-repeat}
+/* Diamond icon */
+.a-diamond .ic.dia{font-size:0;display:inline-block;width:1.2rem;height:1.2rem;vertical-align:-.25rem;background:url(../assets/ui/diamond.png) center/contain no-repeat}
+/* Win and lose dialogs */
+.a-dialog .end{background:url(../assets/ui/dialog.png) center/100% 100% no-repeat;border-radius:0;padding:40px 34px}
+
+/* When real art is present, switch off the matching CSS decoration */
+html.a-btn-primary .btn-primary,html.a-btn-secondary .btn-secondary{box-shadow:none;border-radius:0;padding:14px 20px}
+html.a-btn-primary .btn-primary .bd,html.a-btn-secondary .btn-secondary .bd{display:none}
+html.a-logo .logo-em{display:none}
+html.a-bg-home body[data-s=home] #deco,html.a-bg-levels body:not([data-s=home]):not([data-s=game]) #deco{display:none}
+html.a-panel .pill,html.a-panel .row{background:url(../assets/ui/panel.png) center/100% 100% no-repeat;border:0;box-shadow:none;color:#fff}
+html.a-board-frame #board{box-shadow:none}
+html.a-level-tile .grid button:not(:disabled){box-shadow:none}
+html.a-btn-back .btn-back::before,html.a-btn-undo .btn-undo::before,html.a-btn-reset .btn-reset::before,html.a-btn-hint .btn-hint::before,html.a-btn-help .btn-help::before,html.a-btn-sound .btn-sound::before,
+html.a-btn-back .btn-back::after,html.a-btn-undo .btn-undo::after,html.a-btn-reset .btn-reset::after,html.a-btn-hint .btn-hint::after,html.a-btn-help .btn-help::after,html.a-btn-sound .btn-sound::after,
+html.a-btn-primary .btn-primary::after,html.a-btn-secondary .btn-secondary::after,html.a-level-tile .grid button::after{display:none}
+html.a-btn-back .btn-back,html.a-btn-undo .btn-undo,html.a-btn-reset .btn-reset,html.a-btn-hint .btn-hint,html.a-btn-help .btn-help,html.a-btn-sound .btn-sound,html.a-btn-primary .btn-primary,html.a-btn-secondary .btn-secondary{box-shadow:none;border-radius:0}

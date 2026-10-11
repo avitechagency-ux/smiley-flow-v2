@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smiley Flow</title>
+<link rel="stylesheet" href="css/app.css">
+</head><body data-s="home"><div id="app">
+
+<section id="home" class="scr on">
+ <div class="bar"><span class="pill"><i class="ic dia">💎</i> <span class="dia-n"></span> <b class="plus" onclick="show('shop')">+</b></span><button class="btn-gear ibtn" onclick="openSettings()"><span class="lbl">⚙</span></button></div>
+ <div class="logo-wrap"><div class="logo-em" data-e="😄"></div><h1>SMILEY<br>FLOW</h1></div>
+ <button class="big gold btn-primary playbtn" onclick="playOffline()"><span class="bd" data-e="😎"></span><span>PLAY</span><small id="plsub">Level 1</small></button>
+ <button id="onbtn" class="big btn-blue" onclick="openOnline()"><span class="bd" data-e="🤓"></span><span id="onlbl">Online</span></button>
+ <div id="dock">
+  <button class="dk dk-gift" onclick="openDaily()"><i class="dot" id="giftdot">!</i><span class="ico"></span><small>Rewards</small></button>
+  <button class="dk dk-cal" onclick="daily()"><span class="ico"></span><small>Daily Puzzle</small></button>
+  <button class="dk dk-shop" onclick="show('shop')"><span class="ico"></span><small>Shop</small></button>
+  <button class="dk dk-theme" onclick="show('theme')"><span class="ico"></span><small>Themes</small></button>
+ </div>
+</section>
+
+<section id="online" class="scr">
+ <div class="ohead">
+  <div class="otop"><button class="oback" onclick="show('home')">&#8592;</button><span class="pill"><i class="ic dia">💎</i> <span class="dia-n"></span></span></div>
+  <div class="otabs"><b>Maps</b></div>
+ </div>
+ <div id="wl"></div>
+</section>
+
+<section id="levels" class="scr">
+ <div class="bar"><button class="btn-back ibtn" onclick="backLevels()"><span class="lbl">←</span></button><h2 id="lvh">Levels</h2><span class="pill"><i class="ic dia">💎</i> <span class="dia-n"></span></span></div>
+ <button id="rndBtn" class="big gold btn-primary rnd" onclick="playRandom()">🎲 Random Level</button>
+ <div id="lvnav" class="lvnav"></div>
+ <div class="grid" id="lv"></div>
+</section>
+
+<section id="game" class="scr">
+ <div class="bar"><button class="btn-back ibtn" onclick="show('levels')"><span class="lbl">←</span></button><h2 id="ltitle">Level 1</h2><span class="pill"><i class="ic dia">💎</i> <span class="dia-n"></span></span></div>
+ <div class="bar" style="justify-content:center"><span class="pill">🎯 <span id="tg">0/0</span></span><span class="pill">▦ <span id="fl">0</span></span><span class="pill">👣 <span id="mv">0</span></span><span class="pill">⏱ <span id="tm">0</span>s</span></div>
+ <div id="tbar"><i></i></div>
+ <div id="bwrap"><div id="board"></div></div>
+ <div class="bar" style="justify-content:center;gap:16px">
+  <button class="btn-help ibtn" onclick="help()"><span class="lbl">? Help</span></button>
+  <button class="btn-undo ibtn" onclick="undo()"><span class="lbl">↩ Undo</span><span class="cost uc"></span></button>
+  <button class="btn-reset ibtn" onclick="reset()"><span class="lbl">⟲ Reset</span></button>
+  <button class="btn-hint ibtn" onclick="hint()"><span class="lbl">💡 Hint</span><span class="cost"><i class="ic dia">💎</i><span class="hc"></span></span></button>
+ </div>
+</section>
+
+<section id="shop" class="scr">
+ <div class="bar"><button class="btn-back ibtn" onclick="show('home')"><span class="lbl">←</span></button><h2>Shop</h2><span class="pill"><i class="ic dia">💎</i> <span class="dia-n"></span></span></div>
+ <div class="sec"><h3>FREE GIFT</h3><div class="gcard"><span class="gi" data-e="😍"></span><span class="gt">Watch an ad<small>Get free diamonds</small></span><button class="btn-secondary" onclick="watchAd()">+<span class="ar"></span> <i class="ic dia">💎</i></button></div></div>
+ <div class="sec"><h3>DIAMONDS</h3><div class="pgrid" id="dpacks"></div></div>
+ <div class="sec"><h3>EMOJI PACKS</h3><div id="spacks" class="plist"></div></div>
+</section>
+
+<section id="theme" class="scr">
+ <div class="bar"><button class="btn-back ibtn" onclick="show('home')"><span class="lbl">←</span></button><h2>Theme</h2><span class="pill"><i class="ic dia">💎</i> <span class="dia-n"></span></span></div>
+ <div id="tl" style="display:flex;flex-direction:column;gap:10px;width:100%"></div>
+ <p style="opacity:.7;font-size:.8rem;text-align:center">Emoji graphics: Microsoft Fluent Emoji (MIT license).</p>
+</section>
+</div>
+
+<div id="toast"></div>
+<div id="lose" class="modal"><div class="end"><div class="ribbon red">TIME'S UP</div><span class="aeh big"></span><p id="lmsg"></p><button class="big gold btn-primary" onclick="extend()">+20s <span class="chip sm"><i class="ic dia">💎</i><span class="xc"></span></span></button><button class="big btn-secondary" onclick="reset()">RETRY</button><div class="rrow"><button class="btn-list ibtn" onclick="show('levels')"><span class="lbl">≡</span></button></div></div></div>
+<div id="win" class="modal"><div class="end win"><span class="aeh"></span><div class="ribbon">LEVEL COMPLETE</div><div id="wt" class="stars"></div><div id="wg" class="chip"></div><div id="wstat" class="stat"></div><button id="wnext" class="big gold btn-primary" onclick="nextLv()">NEXT</button><div class="rrow"><button class="btn-reset ibtn" onclick="reset()"><span class="lbl">↻</span></button><button class="btn-list ibtn" onclick="show('levels')"><span class="lbl">≡</span></button></div></div></div>
+<div id="dailyp" class="modal"><div class="end"><div class="ribbon">DAILY REWARD</div><button class="x" onclick="closePop('dailyp')">✕</button><div id="dgrid" class="dgrid"></div><button id="dclaim" class="big gold btn-primary" onclick="claimDaily()">CLAIM</button></div></div>
+<div id="settings" class="modal"><div class="end"><div class="ribbon">SETTINGS</div><button class="x" onclick="closePop('settings')">✕</button>
+ <div class="srow">Music <button class="sw sw-mus" onclick="toggleMusic()"></button></div>
+ <div class="srow">Sound <button class="sw sw-snd" onclick="toggleSound()"></button></div>
+ <small class="credit">Emoji graphics: Microsoft Fluent Emoji (MIT license), (c) Microsoft Corporation.</small></div></div>
+<script src="js/debug.js"></script>
+<script src="js/levels.js" defer></script>
+<script src="levels/packs.js" defer></script>
+<script src="js/app.js" defer></script>
+</body></html>

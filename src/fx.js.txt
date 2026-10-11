@@ -1,0 +1,26 @@
+// Particle effects on a full-screen canvas: trail sparks, bursts, rings, confetti
+const FX=(()=>{let cv,cx,ps=[],on=false;
+ const R=(a,b)=>a+Math.random()*(b-a);
+ function init(){cv=document.createElement('canvas');cv.id='fx';document.body.appendChild(cv);cx=cv.getContext('2d');size();addEventListener('resize',size)}
+ function size(){cv.width=innerWidth;cv.height=innerHeight}
+ function add(p){if(ps.length>220)return;p.t0=performance.now();ps.push(p);if(!on){on=true;requestAnimationFrame(loop)}}
+ function loop(now){cx.clearRect(0,0,cv.width,cv.height);
+  ps=ps.filter(p=>{const e=Math.max(0,(now-p.t0)/1000),t=e/p.life;if(t>=1)return false;
+   if(p.k==='ring'){cx.globalAlpha=1-t;cx.strokeStyle=p.c;cx.lineWidth=4*(1-t)+1;cx.beginPath();cx.arc(p.x,p.y,p.r*(.2+.8*Math.sqrt(t)),0,7);cx.stroke();return true}
+   const x=p.x+p.vx*e,y=p.y+p.vy*e+.5*p.g*e*e;cx.globalAlpha=Math.min(1,(1-t)*1.5);
+   if(p.k==='dot'){cx.fillStyle=p.c;cx.beginPath();cx.arc(x,y,p.s*(1-t*.5),0,7);cx.fill()}
+   else{cx.save();cx.translate(x,y);cx.rotate(p.a+p.w*e);
+    if(p.im&&p.im.complete&&p.im.naturalWidth)cx.drawImage(p.im,-p.s,-p.s,p.s*2,p.s*2);
+    else{cx.fillStyle=p.c;cx.fillRect(-p.s*.6,-p.s*.3,p.s*1.2,p.s*.6)}
+    cx.restore()}
+   return true});
+  cx.globalAlpha=1;if(ps.length)requestAnimationFrame(loop);else{on=false;cx.clearRect(0,0,cv.width,cv.height)}}
+ return{init,
+  spark(x,y,c){for(let i=0;i<1;i++)add({k:'dot',x:x+R(-4,4),y:y+R(-4,4),vx:R(-40,40),vy:R(-60,10),g:120,s:R(1.5,3.2),c,life:R(.35,.6)})},
+  burst(x,y,c,n){for(let i=0;i<n;i++){const a=R(0,6.28),v=R(90,240);add({k:'dot',x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,g:300,s:R(2,4.5),c,life:R(.5,.9)})}},
+  ring(x,y,c,r){add({k:'ring',x,y,c,r,life:.55})},
+  confetti(){const cols=COLS.concat(['#ffffff','#ffd166']),pk=PACKS[activePack()],ims=[];
+   for(let i=0;i<6;i++){const im=new Image();im.src='assets/packs/'+pk.dir+'/'+pk.e[(Math.random()*pk.e.length)|0].codePointAt(0).toString(16)+'.webp';ims.push(im)}
+   for(let i=0;i<110;i++){const left=i%2===0,img=Math.random()<.35;
+    add({k:'conf',x:left?0:innerWidth,y:innerHeight*.75,vx:(left?1:-1)*R(200,650),vy:-R(700,1200),g:1100,a:R(0,6.28),w:R(-8,8),
+     s:img?R(13,19):R(4,7),c:cols[(Math.random()*cols.length)|0],im:img?ims[(Math.random()*ims.length)|0]:null,life:R(2,3.4)})}}}})();

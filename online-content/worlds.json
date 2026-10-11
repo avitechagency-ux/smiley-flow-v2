@@ -1,0 +1,202 @@
+{
+ "version": 3,
+ "worlds": [
+  {
+   "id": "smiley",
+   "name": "Smiley Island",
+   "emoji": "😄",
+   "tagline": "Sunny island of happy faces",
+   "desc": "Sunny island of happy faces",
+   "count": 20,
+   "fx": "island",
+   "levels": "smiley-island/levels.json",
+   "music": "smiley-island/music.mp3",
+   "icon": "smiley-island/anim/icon.png",
+   "color": [
+    "#35c9e8",
+    "#2a9fd0"
+   ],
+   "anim": {
+    "combo-2": "anim/combo-2.webp",
+    "combo-3": "anim/combo-3.webp",
+    "combo-4": "anim/combo-4.webp",
+    "combo-5": "anim/combo-5.webp",
+    "win": "anim/win.webp",
+    "lose": "anim/lose.webp"
+   },
+   "pack": "faces",
+   "featured": true
+  },
+  {
+   "id": "farm",
+   "name": "Animal Farm",
+   "emoji": "🐄",
+   "tagline": "Meet the farm animals",
+   "desc": "Meet the farm animals",
+   "count": 20,
+   "fx": "farm",
+   "levels": "animal-farm/levels.json",
+   "music": "animal-farm/music.mp3",
+   "icon": "animal-farm/anim/icon.png",
+   "color": [
+    "#8fd86a",
+    "#4fae3a"
+   ],
+   "anim": {
+    "combo-2": "anim/combo-2.webp",
+    "combo-3": "anim/combo-3.webp",
+    "combo-4": "anim/combo-4.webp",
+    "combo-5": "anim/combo-5.webp",
+    "win": "anim/win.webp",
+    "lose": "anim/lose.webp"
+   },
+   "pack": "animals"
+  },
+  {
+   "id": "love",
+   "name": "Love Town",
+   "emoji": "❤",
+   "tagline": "A town full of hearts",
+   "desc": "A town full of hearts",
+   "count": 20,
+   "fx": "love",
+   "levels": "love-town/levels.json",
+   "music": "love-town/music.mp3",
+   "icon": "love-town/anim/icon.png",
+   "color": [
+    "#ff8fb8",
+    "#e8508a"
+   ],
+   "anim": {
+    "combo-2": "anim/combo-2.webp",
+    "combo-3": "anim/combo-3.webp",
+    "combo-4": "anim/combo-4.webp",
+    "combo-5": "anim/combo-5.webp",
+    "win": "anim/win.webp",
+    "lose": "anim/lose.webp"
+   },
+   "pack": "hearts"
+  },
+  {
+   "id": "time",
+   "name": "Time Map",
+   "emoji": "🕒",
+   "tagline": "Tick tock puzzles",
+   "desc": "Tick tock puzzles",
+   "count": 20,
+   "fx": "time",
+   "levels": "time-map/levels.json",
+   "music": "time-map/music.mp3",
+   "icon": "time-map/anim/icon.png",
+   "color": [
+    "#f5c85a",
+    "#c98a1f"
+   ],
+   "anim": {
+    "combo-2": "anim/combo-2.webp",
+    "combo-3": "anim/combo-3.webp",
+    "combo-4": "anim/combo-4.webp",
+    "combo-5": "anim/combo-5.webp",
+    "win": "anim/win.webp",
+    "lose": "anim/lose.webp"
+   },
+   "pack": "time"
+  },
+  {
+   "id": "ice",
+   "name": "Ice Cave",
+   "emoji": "🧊",
+   "tagline": "Frozen puzzles under the snow",
+   "desc": "Frozen puzzles under the snow",
+   "count": 20,
+   "fx": "ice",
+   "levels": "ice-cave/levels.json",
+   "music": "ice-cave/music.mp3",
+   "icon": "ice-cave/anim/icon.png",
+   "color": [
+    "#86c6f7",
+    "#6f95ee"
+   ],
+   "anim": {
+    "combo-2": "anim/combo-2.webp",
+    "combo-3": "anim/combo-3.webp",
+    "combo-4": "anim/combo-4.webp",
+    "combo-5": "anim/combo-5.webp",
+    "win": "anim/win.webp",
+    "lose": "anim/lose.webp"
+   }
+  },
+  {
+   "id": "jungle",
+   "name": "Jungle Ruins",
+   "emoji": "🌴",
+   "tagline": "Vines, light and ancient stone",
+   "desc": "Vines, light and ancient stone",
+   "count": 20,
+   "fx": "jungle",
+   "levels": "jungle/levels.json",
+   "music": "jungle/music.mp3",
+   "icon": "jungle/anim/icon.png",
+   "color": [
+    "#5fe0b0",
+    "#2f9a52"
+   ],
+   "anim": {
+    "combo-2": "anim/combo-2.webp",
+    "combo-3": "anim/combo-3.webp",
+    "combo-4": "anim/combo-4.webp",
+    "combo-5": "anim/combo-5.webp",
+    "win": "anim/win.webp",
+    "lose": "anim/lose.webp"
+   }
+  },
+  {
+   "id": "sky",
+   "name": "Sky Islands",
+   "emoji": "☁️",
+   "tagline": "Float above the clouds",
+   "desc": "Float above the clouds",
+   "count": 20,
+   "fx": "sky",
+   "levels": "sky/levels.json",
+   "music": "sky/music.mp3",
+   "icon": "sky/anim/icon.png",
+   "color": [
+    "#7ec8ff",
+    "#4a9de8"
+   ],
+   "anim": {
+    "combo-2": "anim/combo-2.webp",
+    "combo-3": "anim/combo-3.webp",
+    "combo-4": "anim/combo-4.webp",
+    "combo-5": "anim/combo-5.webp",
+    "win": "anim/win.webp",
+    "lose": "anim/lose.webp"
+   }
+  },
+  {
+   "id": "space",
+   "name": "Star Station",
+   "emoji": "🚀",
+   "tagline": "Puzzles among the stars",
+   "desc": "Puzzles among the stars",
+   "count": 20,
+   "fx": "space",
+   "levels": "space/levels.json",
+   "music": "space/music.mp3",
+   "icon": "space/anim/icon.png",
+   "color": [
+    "#cf6cf0",
+    "#8a7cf5"
+   ],
+   "anim": {
+    "combo-2": "anim/combo-2.webp",
+    "combo-3": "anim/combo-3.webp",
+    "combo-4": "anim/combo-4.webp",
+    "combo-5": "anim/combo-5.webp",
+    "win": "anim/win.webp",
+    "lose": "anim/lose.webp"
+   }
+  }
+ ]
+}
