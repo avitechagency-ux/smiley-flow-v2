@@ -9,7 +9,10 @@ function play(n,fs,dl,cus){if(!ACTIVE&&!cus&&!dl&&n>BUILTIN&&!getLv(n)){toast('L
  $('#ltitle').textContent=dl?'Daily Puzzle':cus?'Random '+Lv.size+'x'+Lv.size:'Level '+n;show('game');draw()}
 function daily(){const d=new Date();play(d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(),0,true)}
 function reset(){if(G)play(G.lv,G.fs,G.daily,G.cus)}
-function nextLv(){if(G.daily)show('levels');else if(G.cus)playRandom();else play(Math.min(G.lv+1,maxL()))}
+function nextLevelNum(){const P=wprog(),t=maxL();let n=1;while(n<=t&&P.stars[n])n++;return Math.min(n,t)}
+function playNext(){const n=nextLevelNum();if(n<1)return toast('No levels yet');play(n)}
+function exitGame(){if(ACTIVE)openOnline();else show('home')}
+function nextLv(){if(G.daily)show('home');else if(G.cus)playRandom();else if(G.lv>=maxL())exitGame();else play(G.lv+1)}
 setInterval(()=>{if(G&&$('#game').classList.contains('on')&&!G.won&&!G.over){const t=(Date.now()-G.t0)/1000,rem=G.lim-t;$('#tm').textContent=Math.max(0,Math.ceil(rem));$('#tbar i').style.width=Math.max(0,rem/G.lim*100)+'%';if(rem<=0){G.over=true;G.cur=-1;beep(200,.4);$('#lmsg').textContent=G.done.filter(Boolean).length+' of '+G.pairs.length+' pairs connected';$('#lose .aeh').replaceChildren(animEm('lose','😵'));Voice.say('lose');$('#lose').classList.add('on')}}},200);
 function extend(){if(S.diamonds<EXTEND_COST){$('#lose').classList.remove('on');return show('shop')}S.diamonds-=EXTEND_COST;G.lim+=20;G.over=false;refresh();$('#lose').classList.remove('on')}
 const adj=(a,b)=>{const n=G.n;return Math.abs(a-b)===n||(Math.abs(a-b)===1&&((a/n)|0)===((b/n)|0))};

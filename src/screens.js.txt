@@ -12,7 +12,7 @@ function claimDaily(){const s=drState();if(!s.claimable)return;S.diamonds+=DAILY
  beep(660,.12);beep(880,.2,140);FX.confetti();refresh();buildDaily();toast('+'+DAILY_REWARDS[s.idx]+' diamonds!')}
 function closePop(id){$('#'+id).classList.remove('on')}
 function openSettings(){refresh();$('#settings').classList.add('on')}
-function playSub(){const n=maxL();let i=1;while(i<=n&&S.stars[i])i++;$('#plsub').textContent='Level '+Math.min(i,n)}
+function playSub(){$('#plsub').textContent='Level '+nextLevelNum()}
 function buildShop(){$('#dpacks').innerHTML=DPACKS.map(p=>'<div class="pk">'+(p.best?'<i class="tag">BEST VALUE</i>':'')+'<div class="gems">'+'<i class="ic dia">💎</i>'.repeat(p.g)+'</div><b>'+p.n+'</b><button class="btn-secondary" disabled>Coming soon</button></div>').join('');
  packRows($('#spacks'));$$('[data-e]').forEach(e=>{if(!e.firstChild)e.appendChild(ico(e.dataset.e,'faces'))})}
 function packRows(t){t.innerHTML='';for(const k in PACKS){const p=PACKS[k],r=document.createElement('div');r.className='row';

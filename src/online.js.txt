@@ -31,7 +31,7 @@ function buildWorlds(ws){const l=$('#wl');l.innerHTML='';
  const s=document.createElement('div');s.className='oc soon';s.style.setProperty('--c1','#f27aa0');s.style.setProperty('--c2','#e04a6a');
  s.innerHTML='<span class="oav lockav">🔒</span><span class="otx"><b>More maps</b><small>New maps are added regularly</small></span><span class="ocirc"><i>?</i><small>Coming soon</small></span>';l.appendChild(s);window.WORLDS=ws}
 function openWorldById(id){const w=(window.WORLDS||[]).find(x=>x.id===id);if(w)openWorld(w)}
-async function openWorld(w){toast('Loading '+w.name+'...');try{window.ONLINE_LV=window.ONLINE_LV||{};delete window.ONLINE_LV[w.id];await jsload(w.levels);const L=window.ONLINE_LV[w.id];if(!L||!L.length)throw new Error('empty');ACTIVE=L;WORLD=w;applyBg();ANIM=Object.fromEntries(Object.entries(w.anim||{}).map(([k,v])=>[k,/^https?:/.test(v)?v:ONLINE_BASE+v]));document.body.classList.add('w-'+w.fx);WorldFX.start(w.fx);LV_PG=-1;show('levels')}catch(e){toast('Could not load this world')}}
+async function openWorld(w){toast('Loading '+w.name+'...');try{window.ONLINE_LV=window.ONLINE_LV||{};delete window.ONLINE_LV[w.id];await jsload(w.levels);const L=window.ONLINE_LV[w.id];if(!L||!L.length)throw new Error('empty');ACTIVE=L;WORLD=w;applyBg();ANIM=Object.fromEntries(Object.entries(w.anim||{}).map(([k,v])=>[k,/^https?:/.test(v)?v:ONLINE_BASE+v]));document.body.classList.add('w-'+w.fx);WorldFX.start(w.fx);playNext()}catch(e){toast('Could not load this world')}}
 function leaveWorld(){if(WORLD)document.body.classList.remove('w-'+WORLD.fx);ACTIVE=null;WORLD=null;ANIM={};WorldFX.stop();applyBg()}
 function backLevels(){if(ACTIVE){leaveWorld();show('online')}else show('home')}
-function playOffline(){leaveWorld();LV_PG=-1;show('levels')}
+function playOffline(){leaveWorld();playNext()}

@@ -25,7 +25,7 @@ function initLevels(){if(typeof LEVELS==='undefined'){window.LEVELS=[];if(window
 const HARD_REWARD=2; // diamonds for a heavy level (8x8 or bigger)
 const START_DIAMONDS=10,LEVEL_REWARD=1,DAILY_REWARD=2,HINT_COST=5,EXTEND_COST=3;
 // Online content (worlds). Local folder for testing; for release use e.g. https://cdn.jsdelivr.net/gh/<user>/<repo>@main/online-content/
-const ONLINE_BASE='https://cdn.jsdelivr.net/gh/avitechagency-ux/smiley-flow-v2@main/online-content/';
+const ONLINE_BASE='online-content/';
 const UNDO_COST=0;      // set to 3 when you want undo to cost diamonds
 const AD_REWARD=2,ADS_ENABLED=false; // rewarded ad = +2 diamonds, turn on when ads are integrated
 
@@ -79,10 +79,10 @@ function buildWorlds(ws){const l=$('#wl');l.innerHTML='';
  const s=document.createElement('div');s.className='oc soon';s.style.setProperty('--c1','#f27aa0');s.style.setProperty('--c2','#e04a6a');
  s.innerHTML='<span class="oav lockav">🔒</span><span class="otx"><b>More maps</b><small>New maps are added regularly</small></span><span class="ocirc"><i>?</i><small>Coming soon</small></span>';l.appendChild(s);window.WORLDS=ws}
 function openWorldById(id){const w=(window.WORLDS||[]).find(x=>x.id===id);if(w)openWorld(w)}
-async function openWorld(w){toast('Loading '+w.name+'...');try{window.ONLINE_LV=window.ONLINE_LV||{};delete window.ONLINE_LV[w.id];await jsload(w.levels);const L=window.ONLINE_LV[w.id];if(!L||!L.length)throw new Error('empty');ACTIVE=L;WORLD=w;applyBg();ANIM=Object.fromEntries(Object.entries(w.anim||{}).map(([k,v])=>[k,/^https?:/.test(v)?v:ONLINE_BASE+v]));document.body.classList.add('w-'+w.fx);WorldFX.start(w.fx);LV_PG=-1;show('levels')}catch(e){toast('Could not load this world')}}
+async function openWorld(w){toast('Loading '+w.name+'...');try{window.ONLINE_LV=window.ONLINE_LV||{};delete window.ONLINE_LV[w.id];await jsload(w.levels);const L=window.ONLINE_LV[w.id];if(!L||!L.length)throw new Error('empty');ACTIVE=L;WORLD=w;applyBg();ANIM=Object.fromEntries(Object.entries(w.anim||{}).map(([k,v])=>[k,/^https?:/.test(v)?v:ONLINE_BASE+v]));document.body.classList.add('w-'+w.fx);WorldFX.start(w.fx);playNext()}catch(e){toast('Could not load this world')}}
 function leaveWorld(){if(WORLD)document.body.classList.remove('w-'+WORLD.fx);ACTIVE=null;WORLD=null;ANIM={};WorldFX.stop();applyBg()}
 function backLevels(){if(ACTIVE){leaveWorld();show('online')}else show('home')}
-function playOffline(){leaveWorld();LV_PG=-1;show('levels')}
+function playOffline(){leaveWorld();playNext()}
 
 /* world */
 // Moving effects for themes and maps, drawn in code: snow+fog, jungle light and leaves, clouds, stars, hearts, gears
@@ -181,7 +181,7 @@ function claimDaily(){const s=drState();if(!s.claimable)return;S.diamonds+=DAILY
  beep(660,.12);beep(880,.2,140);FX.confetti();refresh();buildDaily();toast('+'+DAILY_REWARDS[s.idx]+' diamonds!')}
 function closePop(id){$('#'+id).classList.remove('on')}
 function openSettings(){refresh();$('#settings').classList.add('on')}
-function playSub(){const n=maxL();let i=1;while(i<=n&&S.stars[i])i++;$('#plsub').textContent='Level '+Math.min(i,n)}
+function playSub(){$('#plsub').textContent='Level '+nextLevelNum()}
 function buildShop(){$('#dpacks').innerHTML=DPACKS.map(p=>'<div class="pk">'+(p.best?'<i class="tag">BEST VALUE</i>':'')+'<div class="gems">'+'<i class="ic dia">💎</i>'.repeat(p.g)+'</div><b>'+p.n+'</b><button class="btn-secondary" disabled>Coming soon</button></div>').join('');
  packRows($('#spacks'));$$('[data-e]').forEach(e=>{if(!e.firstChild)e.appendChild(ico(e.dataset.e,'faces'))})}
 function packRows(t){t.innerHTML='';for(const k in PACKS){const p=PACKS[k],r=document.createElement('div');r.className='row';
@@ -302,7 +302,10 @@ function play(n,fs,dl,cus){if(!ACTIVE&&!cus&&!dl&&n>BUILTIN&&!getLv(n)){toast('L
  $('#ltitle').textContent=dl?'Daily Puzzle':cus?'Random '+Lv.size+'x'+Lv.size:'Level '+n;show('game');draw()}
 function daily(){const d=new Date();play(d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate(),0,true)}
 function reset(){if(G)play(G.lv,G.fs,G.daily,G.cus)}
-function nextLv(){if(G.daily)show('levels');else if(G.cus)playRandom();else play(Math.min(G.lv+1,maxL()))}
+function nextLevelNum(){const P=wprog(),t=maxL();let n=1;while(n<=t&&P.stars[n])n++;return Math.min(n,t)}
+function playNext(){const n=nextLevelNum();if(n<1)return toast('No levels yet');play(n)}
+function exitGame(){if(ACTIVE)openOnline();else show('home')}
+function nextLv(){if(G.daily)show('home');else if(G.cus)playRandom();else if(G.lv>=maxL())exitGame();else play(G.lv+1)}
 setInterval(()=>{if(G&&$('#game').classList.contains('on')&&!G.won&&!G.over){const t=(Date.now()-G.t0)/1000,rem=G.lim-t;$('#tm').textContent=Math.max(0,Math.ceil(rem));$('#tbar i').style.width=Math.max(0,rem/G.lim*100)+'%';if(rem<=0){G.over=true;G.cur=-1;beep(200,.4);$('#lmsg').textContent=G.done.filter(Boolean).length+' of '+G.pairs.length+' pairs connected';$('#lose .aeh').replaceChildren(animEm('lose','😵'));Voice.say('lose');$('#lose').classList.add('on')}}},200);
 function extend(){if(S.diamonds<EXTEND_COST){$('#lose').classList.remove('on');return show('shop')}S.diamonds-=EXTEND_COST;G.lim+=20;G.over=false;refresh();$('#lose').classList.remove('on')}
 const adj=(a,b)=>{const n=G.n;return Math.abs(a-b)===n||(Math.abs(a-b)===1&&((a/n)|0)===((b/n)|0))};

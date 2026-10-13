@@ -23,6 +23,6 @@ function initLevels(){if(typeof LEVELS==='undefined'){window.LEVELS=[];if(window
 const HARD_REWARD=2; // diamonds for a heavy level (8x8 or bigger)
 const START_DIAMONDS=10,LEVEL_REWARD=1,DAILY_REWARD=2,HINT_COST=5,EXTEND_COST=3;
 // Online content (worlds). Local folder for testing; for release use e.g. https://cdn.jsdelivr.net/gh/<user>/<repo>@main/online-content/
-const ONLINE_BASE='https://cdn.jsdelivr.net/gh/avitechagency-ux/smiley-flow-v2@main/online-content/';
+const ONLINE_BASE='online-content/';
 const UNDO_COST=0;      // set to 3 when you want undo to cost diamonds
 const AD_REWARD=2,ADS_ENABLED=false; // rewarded ad = +2 diamonds, turn on when ads are integrated
